@@ -1,23 +1,18 @@
 package br.edu.ifrs.riogrande.tads.tds.util.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import br.edu.ifrs.riogrande.tads.tds.util.dto.ApiResponse;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1/color")
 public class ColorController {
 
     @GetMapping("/rgb-to-hsl")
-    public String convertRgbToHsl(@RequestParam String rgb) {
-        if (!rgb.matches("^([A-Fa-f0-9]{6})$")) {
-            return "Formato inválido. Use RRGGBB.";
+    public ApiResponse convertRgbToHsl(@RequestParam String rgb) {
+        if (!rgb.matches("^[A-Fa-f0-9]{6}$")) {
+            return new ApiResponse("Formato inválido. Use RRGGBB.", null);
         }
 
-        // 0123456
-        // A012F2
         int r = Integer.parseInt(rgb.substring(0, 2), 16);
         int g = Integer.parseInt(rgb.substring(2, 4), 16);
         int b = Integer.parseInt(rgb.substring(4, 6), 16);
@@ -32,7 +27,7 @@ public class ColorController {
         l = (max + min) / 2;
 
         if (max == min) {
-            h = s = 0; // achromatic
+            h = s = 0;
         } else {
             float d = max - min;
             s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
@@ -50,6 +45,9 @@ public class ColorController {
         int S = Math.round(s * 100);
         int L = Math.round(l * 100);
 
-        return String.format("HSL(%d, %d%%, %d%%)", H, S, L);
+        String result = String.format("HSL(%d, %d%%, %d%%)", H, S, L);
+        return new ApiResponse("Conversão realizada com sucesso", result);
     }
 }
+
+// endpoint atualizado manualmente para forçar git diff
