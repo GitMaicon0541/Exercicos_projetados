@@ -49,3 +49,5 @@ public class ColorController {
         return new ApiResponse("Conversão realizada com sucesso", result);
     }
 }
+
+// endpoint atualizado manualmente para forçar git diff
